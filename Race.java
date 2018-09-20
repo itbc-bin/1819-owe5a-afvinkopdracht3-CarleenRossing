@@ -1,25 +1,6 @@
 package afvink3;
 
 /**
- * Race class
- * Class Race maakt gebruik van de class Paard
- *
- * @author Martijn van der Bruggen
- * @version alpha - aanroep van cruciale methodes ontbreekt
- * (c) 2009 Hogeschool van Arnhem en Nijmegen
- *
- * Note: deze code is bewust niet op alle punten generiek
- * dit om nog onbekende constructies te vermijden.
- *
- * Updates
- * 2010: verduidelijking van opdrachten in de code MvdB
- * 2011: verbetering leesbaarheid code MvdB
- * 2012: verbetering layout code en aanpassing commentaar MvdB
- * 2013: commentaar aangepast aan nieuwe opdracht MvdB
- *
- *************************************************
- * Afvinkopdracht: werken met methodes en objecten
- *************************************************
  * Opdrachten zitten verwerkt in de code
  * 1) Declaratie constante
  * 2) Declaratie van Paard (niet instantiering)
@@ -32,14 +13,21 @@ package afvink3;
  * 9) Plaats tekst op de button
  * 10) Start de race, methode aanroep
  *
- *
  */
 import java.awt.*;
 import java.awt.event.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class Race extends JFrame implements ActionListener {
-
+    int lengte = 250;
+    Paard h1;
+    Paard h2;
+    Paard h3;
+    Paard h4;
+    JButton button;
+    
     /** declaratie van variabelen */
     /* (1) Declareer hier een constante int met de naam lengte en een waarde van 250 */
     /* (2) Declareer hier h1, h2, h3, h4 van het type Paard
@@ -48,9 +36,11 @@ public class Race extends JFrame implements ActionListener {
     /* (3) Declareer een button met de naam button van het type JButton */
     private JPanel panel;
 
-    /** Applicatie - main functie voor runnen applicatie */
+    /** Applicatie - main functie voor runnen applicatie
+     * @param args */
     public static void main(String[] args) {
         Race frame = new Race();
+        frame.setSize(400,140);
         /* (4) Geef het frame een breedte van 400 en hoogte van 140 */
         frame.createGUI();
         frame.setVisible(true);
@@ -58,8 +48,9 @@ public class Race extends JFrame implements ActionListener {
 
     /** Loop de race
      */
-    private void startRace(Graphics g) {
+    private void startRace(Graphics g) throws InterruptedException {
         panel.setBackground(Color.white);
+        g.setColor(Color.red);
         /** Tekenen van de finish streep */
         /* (5) Geef de finish streep een rode kleur */
         g.fillRect(lengte, 0, 3, 100);
@@ -69,7 +60,11 @@ public class Race extends JFrame implements ActionListener {
          * Kijk in de class Paard hoe je de paarden
          * kunt initialiseren.
          */
-        /** Loop tot een paard over de finish is*/
+        /* Loop tot een paard over de finish is*/
+        h1 = new Paard("Kees", Color.BLUE);
+        h2 = new Paard("Tom", Color.GREEN);
+        h3 = new Paard("Jade", Color.BLACK);
+        h4 = new Paard("Carleen", Color.ORANGE);
         while (h1.getAfstand() < lengte
                 && h2.getAfstand() < lengte
                 && h3.getAfstand() < lengte
@@ -78,7 +73,7 @@ public class Race extends JFrame implements ActionListener {
             h2.run();
             h3.run();
             h4.run();
-
+            pauzeer(100);
             /* (7) Voeg hier een aanroep van de methode pauzeer toe zodanig
              * dat er 1 seconde pauze is. De methode pauzeer is onderdeel
              * van deze class
@@ -86,6 +81,11 @@ public class Race extends JFrame implements ActionListener {
             /* (8) Voeg hier code in om 4 paarden te tekenen die rennen
              * Dus een call van de methode tekenPaard
              */
+            tekenPaard(g, h1);
+            tekenPaard(g, h2);
+            tekenPaard(g, h3);
+            tekenPaard(g, h4);
+            
         }
         /** Kijk welk paard gewonnen heeft
          */
@@ -103,7 +103,7 @@ public class Race extends JFrame implements ActionListener {
         }
     }
 
-    /** Creatie van de GUI*/
+    /* Creatie van de GUI*/
     private void createGUI() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Container window = getContentPane();
@@ -112,6 +112,7 @@ public class Race extends JFrame implements ActionListener {
         panel.setPreferredSize(new Dimension(300, 100));
         panel.setBackground(Color.white);
         window.add(panel);
+        button = new JButton("Run!");
         /* (9) Zet hier de tekst Run! op de button */
         window.add(button);
         button.addActionListener(this);
@@ -123,14 +124,21 @@ public class Race extends JFrame implements ActionListener {
         g.fillRect(10, 20 * h.getPaardNummer(), h.getAfstand(), 5);
     }
 
-    /** Actie indien de button geklikt is*/
+    /** Actie indien de button geklikt i
+     * @param event*/
+    @Override
     public void actionPerformed(ActionEvent event) {
         Graphics paper = panel.getGraphics();
-        /* (10) Roep hier de methode startrace aan met de juiste parameterisering */
-        startRace (paper);
+        try {
+            /* (10) Roep hier de methode startrace aan met de juiste parameterisering */
+            startRace(paper);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Race.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    /** Pauzeer gedurende x millisecondes*/
+    /** Pauzeer gedurende x millisecond
+     * @param msec*/
     public void pauzeer(int msec) {
         try {
             Thread.sleep(msec);
@@ -141,4 +149,3 @@ public class Race extends JFrame implements ActionListener {
 
 
 }
-

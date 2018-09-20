@@ -31,6 +31,10 @@ public class Paard {
         paardNummer = ++aantal;
     }
 
+    Paard() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public String getNaam() {
         return this.naam;
     }
